@@ -70,10 +70,10 @@ async function main() {
   window.addEventListener('resize', () => document.body.dispatchEvent(new Event('chessground.resize')));
   app.show('play');
   window.__app = app; // para depurar desde la consola
-  if (store.isNew()) await askLevel();
   if ('serviceWorker' in navigator && !['localhost', '127.0.0.1'].includes(location.hostname)) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
+  if (store.isNew()) await askLevel();
 }
 
 /** Primera visita: pregunta el nivel para empezar con un rival adecuado. */

@@ -1,7 +1,13 @@
 # Entrenador de Ajedrez
 
-Para abrirla: doble clic en **Ajedrez.bat**. Se abre el navegador en http://127.0.0.1:8765
+**Web pública (gratis, también en el móvil):** https://rafasg2005-blip.github.io/ajedrez/
+En el móvil se puede instalar como app: Chrome → menú ⋮ → «Instalar aplicación»; iPhone/Safari → Compartir → «Añadir a pantalla de inicio».
+
+**Versión local:** doble clic en **Ajedrez.bat**. Se abre el navegador en http://127.0.0.1:8765
 (deja abierta la ventana negra mientras juegas; ciérrala para apagar la app).
+
+**Publicar cambios en la web:** `git add -A`, `git commit -m "..."` y `git push` desde esta carpeta
+(GitHub Pages se actualiza solo en uno o dos minutos).
 
 ## Qué tiene
 - **Jugar**: partidas sin límite contra un rival con ELO **adaptativo** (sube si ganas, baja si pierdes) o fijo (250–2500).
