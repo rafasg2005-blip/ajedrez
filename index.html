@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrenador de Ajedrez</title>
+<meta name="description" content="Juega contra un entrenador que te corrige en vivo, resuelve problemas sin límite y aprende aperturas. Gratis.">
+<meta name="theme-color" content="#1b1a18">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ajedrez">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="vendor/chessground/chessground.base.css">
+<link rel="stylesheet" href="vendor/chessground/chessground.brown.css">
+<link rel="stylesheet" href="vendor/chessground/chessground.cburnett.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-green">
+<header class="top">
+  <div class="brand"><span class="logo">♞</span> Entrenador</div>
+  <nav id="nav">
+    <button data-view="play" class="active">Jugar</button>
+    <button data-view="puzzles">Problemas</button>
+    <button data-view="openings">Aperturas</button>
+    <button data-view="history">Historial</button>
+  </nav>
+  <div class="ratings">
+    <span title="Tu ELO en partidas">♟ <b id="hdr-rating">650</b></span>
+    <span title="Tu ELO en problemas">🧩 <b id="hdr-prating">800</b></span>
+  </div>
+</header>
+
+<main>
+  <!-- ============ JUGAR ============ -->
+  <section id="view-play" class="view active">
+    <div class="layout">
+      <div class="board-col">
+        <div class="player-tag" id="play-top"></div>
+        <div class="board-row">
+          <div class="evalbar" id="play-evalbar"><div class="fill"></div><span class="lbl"></span></div>
+          <div class="board-host" id="play-host"><div class="cg" id="play-board"></div></div>
+        </div>
+        <div class="player-tag" id="play-bottom"></div>
+      </div>
+      <aside class="side">
+        <div class="card coach">
+          <div class="coach-head">
+            <div class="avatar">♞</div>
+            <div class="coach-title"><b>Entrenador</b><div class="sub" id="play-opening">Partida nueva</div></div>
+            <div class="thinking" id="play-thinking" hidden><span></span><span></span><span></span></div>
+          </div>
+          <div class="bubble" id="play-bubble">¡Hola! Pulsa <b>Nueva partida</b> para empezar.</div>
+          <div class="bubble-actions" id="play-actions"></div>
+        </div>
+        <div class="card moves" id="play-moves"></div>
+        <div class="toolbar">
+          <button id="play-hint" title="Pista (una pulsación: qué pieza; dos: la jugada)">💡 Pista</button>
+          <button id="play-threat" title="¿Qué amenaza el rival?">⚠️ Amenaza</button>
+          <button id="play-undo" title="Deshacer tu última jugada">↶ Deshacer</button>
+          <button id="play-flip" title="Girar el tablero">⇅ Girar</button>
+          <button id="play-resign" title="Abandonar">🏳️ Rendirse</button>
+          <button id="play-new" class="primary">Nueva partida</button>
+        </div>
+        <details class="card settings">
+          <summary>Opciones del entrenador</summary>
+          <label><input type="checkbox" data-setting="coach"> Comentar cada jugada en vivo</label>
+          <label><input type="checkbox" data-setting="pauseOnError"> Pararse tras mis errores para poder reintentar</label>
+          <label><input type="checkbox" data-setting="warnOpp"> Avisarme cuando el rival se equivoque</label>
+          <label><input type="checkbox" data-setting="evalBar"> Mostrar barra de evaluación</label>
+          <label><input type="checkbox" data-setting="sound"> Sonido</label>
+          <label>Tablero
+            <select data-setting="theme"><option value="green">Verde</option><option value="brown">Madera</option><option value="blue">Azul</option></select>
+          </label>
+        </details>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ PROBLEMAS ============ -->
+  <section id="view-puzzles" class="view">
+    <div class="layout">
+      <div class="board-col">
+        <div class="player-tag" id="pz-top"></div>
+        <div class="board-row">
+          <div class="board-host" id="pz-host"><div class="cg" id="pz-board"></div></div>
+        </div>
+        <div class="player-tag" id="pz-bottom"></div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <div class="seg" id="pz-mode">
+            <button data-mode="rated" class="active">Normal</button>
+            <button data-mode="streak">Racha</button>
+            <button data-mode="mistakes">Mis errores</button>
+          </div>
+          <label class="row">Tema
+            <select id="pz-theme"></select>
+          </label>
+          <label class="row" style="margin-top:8px">Dificultad
+            <select id="pz-diff">
+              <option value="-400">Muy fácil</option>
+              <option value="-200">Fácil</option>
+              <option value="0">Mi nivel (se adapta)</option>
+              <option value="200">Difícil</option>
+              <option value="400">Muy difícil</option>
+              <option value="700">Extrema</option>
+              <option value="custom">Elegir ELO exacto…</option>
+            </select>
+          </label>
+          <div id="pz-custom" hidden style="margin-top:8px">
+            <input type="range" id="pz-custom-elo" min="400" max="2700" step="50">
+            <div class="muted">Problemas de ELO <b id="pz-custom-lbl"></b></div>
+          </div>
+          <div class="muted sm" id="pz-diff-txt" style="margin-top:6px"></div>
+        </div>
+        <div class="card pz-status">
+          <div class="pz-title" id="pz-title">Cargando problemas…</div>
+          <div class="bubble" id="pz-msg"></div>
+          <div class="pz-meta" id="pz-meta"></div>
+        </div>
+        <div class="toolbar">
+          <button id="pz-hint">💡 Pista</button>
+          <button id="pz-solution">👁️ Solución</button>
+          <button id="pz-retry">↻ Reintentar</button>
+          <button id="pz-next" class="primary">Siguiente ▶</button>
+        </div>
+        <div class="card stats" id="pz-stats"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ APERTURAS ============ -->
+  <section id="view-openings" class="view">
+    <div class="layout">
+      <div class="board-col">
+        <div class="player-tag" id="op-top"></div>
+        <div class="board-row">
+          <div class="board-host" id="op-host"><div class="cg" id="op-board"></div></div>
+        </div>
+        <div class="player-tag" id="op-bottom"></div>
+      </div>
+      <aside class="side">
+        <div class="card" id="op-current" hidden>
+          <div class="op-head"><b id="op-name"></b><span class="pill" id="op-side"></span></div>
+          <p class="idea" id="op-idea"></p>
+          <div class="progress"><div id="op-progress"></div></div>
+          <div class="bubble" id="op-msg"></div>
+          <div class="moves inline" id="op-moves"></div>
+          <div class="toolbar">
+            <button id="op-back">◀ Lista</button>
+            <button id="op-watch">▶ Ver la línea</button>
+            <button id="op-restart">↻ Repetir</button>
+            <button id="op-play" class="primary">Jugar desde aquí</button>
+          </div>
+        </div>
+        <div id="op-list"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ REVISIÓN ============ -->
+  <section id="view-review" class="view">
+    <div class="layout">
+      <div class="board-col">
+        <div class="player-tag" id="rv-top"></div>
+        <div class="board-row">
+          <div class="evalbar" id="rv-evalbar"><div class="fill"></div><span class="lbl"></span></div>
+          <div class="board-host" id="rv-host"><div class="cg" id="rv-board"></div></div>
+        </div>
+        <div class="player-tag" id="rv-bottom"></div>
+      </div>
+      <aside class="side">
+        <div class="card" id="rv-progress-card" hidden>
+          <b>Analizando la partida…</b>
+          <div class="progress"><div id="rv-progress"></div></div>
+        </div>
+        <div class="card" id="rv-summary"></div>
+        <div class="card graph" id="rv-graph"></div>
+        <div class="card coach">
+          <div class="bubble" id="rv-comment">Elige una jugada.</div>
+          <div class="bubble-actions" id="rv-actions"></div>
+        </div>
+        <div class="card moves" id="rv-moves"></div>
+        <div class="toolbar nav">
+          <button id="rv-first">⏮</button><button id="rv-prev">◀</button><button id="rv-next">▶</button><button id="rv-last">⏭</button>
+          <button id="rv-flip">⇅</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ HISTORIAL ============ -->
+  <section id="view-history" class="view">
+    <div class="history-wrap">
+      <div class="card"><h3>Tu ELO en partidas</h3><div id="hs-chart"></div></div>
+      <div class="card"><h3>Tu ELO en problemas</h3><div id="hs-pchart"></div></div>
+      <div class="card"><h3>Resumen</h3><div id="hs-stats"></div></div>
+      <div class="card wide"><h3>Partidas</h3><div id="hs-list"></div></div>
+      <div class="card wide">
+        <h3>Copia de seguridad</h3>
+        <p class="muted">Tus datos se guardan en este navegador. Exporta una copia de vez en cuando.</p>
+        <div class="toolbar">
+          <button id="hs-export">⬇ Exportar datos</button>
+          <label class="btn">⬆ Importar datos<input type="file" id="hs-import" accept=".json" hidden></label>
+          <button id="hs-reset" class="danger">Borrar todo</button>
+        </div>
+      </div>
+      <div class="card wide">
+        <h3>Acerca de</h3>
+        <p><b>Instálala en el móvil:</b> en Android (Chrome) abre el menú ⋮ y pulsa «Instalar aplicación» o «Añadir a pantalla de inicio».
+          En iPhone (Safari) pulsa Compartir y luego «Añadir a pantalla de inicio». Funciona también sin conexión.</p>
+        <p class="muted">Gratis y sin anuncios. Tus datos se guardan solo en tu dispositivo; no hay cuentas ni se envía nada a ningún servidor.</p>
+        <p class="muted sm">Motor <a href="https://stockfishchess.org" target="_blank" rel="noopener">Stockfish</a> (GPLv3) ·
+          tablero <a href="https://github.com/lichess-org/chessground" target="_blank" rel="noopener">chessground</a> (GPLv3) ·
+          reglas <a href="https://github.com/jhlywa/chess.js" target="_blank" rel="noopener">chess.js</a> (BSD) ·
+          problemas y aperturas de la base pública de <a href="https://database.lichess.org" target="_blank" rel="noopener">Lichess</a> (CC0).</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-bg" id="modal" hidden><div class="modal" id="modal-body"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
