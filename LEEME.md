@@ -10,6 +10,9 @@ En el móvil se puede instalar como app: Chrome → menú ⋮ → «Instalar apl
 (GitHub Pages se actualiza solo en uno o dos minutos).
 
 ## Qué tiene
+- **Aprender**: recorrido de 32 lecciones en 6 unidades (piezas, reglas, primeros pasos, táctica I y II, finales),
+  con estrellas y progreso guardado. Se empieza en una unidad u otra según el nivel elegido; las anteriores quedan
+  convalidadas y se pueden repasar. El temario está en `js/lessons.js`.
 - **Jugar**: partidas sin límite contra un rival con ELO **adaptativo** (sube si ganas, baja si pierdes) o fijo (250–2500).
   El entrenador comenta cada jugada en vivo (Brillante, Genial, La mejor, Excelente, Buena, De libro, Imprecisión, Error,
   Oportunidad perdida, Error grave), explica el porqué (pieza colgada, mate permitido, ataque doble…) y se para tras tus errores

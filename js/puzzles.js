@@ -4,6 +4,7 @@ import { Board } from './board.js';
 import { engine } from './engine.js';
 import { sfx } from './sound.js';
 import { store } from './storage.js';
+import { loadPuzzleDb } from './puzzledb.js';
 
 const THEMES = [
   ['', 'Todos los temas'], ['mateIn1', 'Mate en 1'], ['mateIn2', 'Mate en 2'], ['mateIn3', 'Mate en 3'],
@@ -71,9 +72,7 @@ export function initPuzzles(_app) {
 async function load() {
   if (all) return all;
   $('pz-title').textContent = 'Cargando problemas…';
-  const data = await fetch('data/puzzles.json').then((r) => r.json());
-  all = data.map(([id, fen, moves, rating, themes]) => ({ id, fen, moves: moves.split(' '), rating, themes }));
-  all.sort((a, b) => a.rating - b.rating);
+  all = await loadPuzzleDb();
   return all;
 }
 

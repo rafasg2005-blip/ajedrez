@@ -22,6 +22,7 @@
 <header class="top">
   <div class="brand"><span class="logo">♞</span> Entrenador</div>
   <nav id="nav">
+    <button data-view="learn">Aprender</button>
     <button data-view="play" class="active">Jugar</button>
     <button data-view="puzzles">Problemas</button>
     <button data-view="openings">Aperturas</button>
@@ -34,6 +35,35 @@
 </header>
 
 <main>
+  <!-- ============ APRENDER ============ -->
+  <section id="view-learn" class="view">
+    <div id="ln-map" class="ln-map"></div>
+    <div id="ln-lesson" class="layout" hidden>
+      <div class="board-col">
+        <div class="board-row">
+          <div class="board-host" id="ln-host"><div class="cg" id="ln-board"></div></div>
+        </div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <div class="ln-head">
+            <button class="small" id="ln-back">◀ Recorrido</button>
+            <div class="coach-title"><div class="sub" id="ln-unit"></div><b id="ln-title"></b></div>
+          </div>
+          <div class="progress"><div id="ln-progress"></div></div>
+          <div class="bubble info" id="ln-text"></div>
+          <div class="ln-options" id="ln-options"></div>
+          <div class="bubble" id="ln-feedback" hidden></div>
+        </div>
+        <div class="toolbar">
+          <button id="ln-hint">💡 Pista</button>
+          <button id="ln-retry">↻ Reintentar</button>
+          <button id="ln-next" class="primary">Siguiente ▶</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
   <!-- ============ JUGAR ============ -->
   <section id="view-play" class="view active">
     <div class="layout">

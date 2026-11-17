@@ -8,6 +8,7 @@ import { initPuzzles } from './puzzles.js';
 import { initOpenings } from './openings.js';
 import { initReview } from './review.js';
 import { initHistory } from './history.js';
+import { initLearn, setLearnStart, learnUnfinished, validateLessons } from './learn.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -23,10 +24,8 @@ const app = {
     document.querySelectorAll('.view').forEach((v) => v.classList.toggle('active', v.id === 'view-' + name));
     document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === name));
     app.current = name;
-    requestAnimationFrame(() => {
-      app.views[name]?.onShow?.();
-      app.views[name]?.board?.redraw();
-    });
+    app.views[name]?.onShow?.();
+    requestAnimationFrame(() => app.views[name]?.board?.redraw());
   },
   openReview(id) { app.review.open(id); },
 };
@@ -60,6 +59,7 @@ async function main() {
   app.play = initPlay(app);
   app.review = initReview(app);
   app.views = {
+    learn: initLearn(app),
     play: app.play,
     puzzles: initPuzzles(app),
     openings: initOpenings(app),
@@ -68,8 +68,10 @@ async function main() {
   };
   document.querySelectorAll('#nav button').forEach((b) => (b.onclick = () => app.show(b.dataset.view)));
   window.addEventListener('resize', () => document.body.dispatchEvent(new Event('chessground.resize')));
-  app.show('play');
+  // los principiantes empiezan en el recorrido de aprendizaje
+  app.show(!store.isNew() && app.profile.rating < 500 && learnUnfinished() ? 'learn' : 'play');
   window.__app = app; // para depurar desde la consola
+  window.__validateLessons = validateLessons;
   if ('serviceWorker' in navigator && !['localhost', '127.0.0.1'].includes(location.hostname)) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
@@ -79,7 +81,7 @@ async function main() {
 /** Primera visita: pregunta el nivel para empezar con un rival adecuado. */
 async function askLevel() {
   const levels = [
-    [400, 'Estoy empezando', 'Sé cómo se mueven las piezas'],
+    [400, 'Estoy empezando', 'Te enseñamos desde cero: piezas, reglas y primeros trucos'],
     [650, 'Juego de vez en cuando', 'Unos 500–800 de ELO online'],
     [1000, 'Intermedio', 'Unos 900–1200'],
     [1400, 'Avanzado', 'Unos 1300–1600'],
@@ -95,6 +97,7 @@ async function askLevel() {
   app.profile.rating = r;
   app.profile.prating = r + 250;
   app.saveProfile();
+  setLearnStart(r);
   location.reload();
 }
 

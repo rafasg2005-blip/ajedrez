@@ -1,10 +1,11 @@
 // Service worker: permite instalar la app y usarla sin conexión.
 // Estrategia: responde con la copia guardada y la actualiza en segundo plano.
-const CACHE = 'ajedrez-v1';
+const CACHE = 'ajedrez-v2';
 const CORE = [
   './', 'index.html', 'css/style.css', 'manifest.webmanifest',
   'js/app.js', 'js/util.js', 'js/storage.js', 'js/engine.js', 'js/book.js', 'js/coach.js', 'js/bot.js',
   'js/board.js', 'js/sound.js', 'js/play.js', 'js/puzzles.js', 'js/openings.js', 'js/review.js', 'js/history.js',
+  'js/learn.js', 'js/lessons.js', 'js/puzzledb.js',
   'vendor/chess.js', 'vendor/chessground/chessground.js', 'vendor/chessground/chessground.base.css',
   'vendor/chessground/chessground.brown.css', 'vendor/chessground/chessground.cburnett.css',
   'vendor/stockfish/stockfish.js', 'vendor/stockfish/stockfish.wasm',

@@ -58,6 +58,8 @@ export const store = {
   saveMistakes(m) { set('mistakes', m.slice(-400)); },
   openings() { return get('openings', {}); },
   saveOpenings(o) { set('openings', o); },
+  learn() { return get('learn', null); },
+  saveLearn(l) { set('learn', l); },
   seenPuzzles() { return get('seen', []); },
   saveSeenPuzzles(s) { set('seen', s.slice(-3000)); },
   exportAll() {
